@@ -12,7 +12,7 @@
     "config": "^3.3.3",
     "mineflayer": "^2.40.0",
     "mineflayer-cmd": "^1.0.0",
-    "prismarine-viewer": "^1.20.0",
+    "prismarine-nbt": "^1.2.0",
     "mineflayer-pvp": "PrismarineJS/mineflayer-pvp",
     "express": "^4.18.2"
   }
