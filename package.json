@@ -11,7 +11,7 @@
   "dependencies": {
     "config": "^3.3.3",
     "mineflayer": "^4.6.1",
-    "mineflayer-pvp": "^1.9.0",
+    "mineflayer-pvp": "1.8.1",
     "mineflayer-pathfinder": "^1.6.0",
     "mineflayer-armor-manager": "^1.1.1",
     "mineflayer-auto-eat": "^1.1.1",
