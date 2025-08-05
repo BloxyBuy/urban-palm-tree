@@ -12,5 +12,5 @@ app.listen(PORT, () => {
   console.log(`Express server running on port ${PORT}`);
 });
 
-const {mineboty} = require("mineboty")
+const { mineboty } = require("./mineboty");
 mineboty();
