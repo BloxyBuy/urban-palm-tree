@@ -15,7 +15,7 @@
     "mineflayer-pathfinder": "https://github.com/PrismarineJS/mineflayer-pathfinder",
     "mineflayer-armor-manager": "https://github.com/PrismarineJS/mineflayer-armor-manager",
     "mineflayer-auto-eat": "https://github.com/link-discord/mineflayer-auto-eat",
-    "mineflayer-statemachine": "https://github.com/shiffman/mineflayer-statemachine",
+    "mineflayer-statemachine": "https://github.com/PrismarineJS/mineflayer-statemachine",
     "mineflayer-utils": "https://github.com/TheDudeFromCI/mineflayer-utils",
     "mineflayer-web-inventory": "https://github.com/PrismarineJS/mineflayer-web-inventory",
     "prismarine-nbt": "^1.2.0",
