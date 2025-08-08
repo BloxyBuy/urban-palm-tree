@@ -13,7 +13,7 @@
     "mineflayer": "https://github.com/PrismarineJS/mineflayer.git#e3f89d1",
     "mineflayer-pvp": "https://github.com/PrismarineJS/mineflayer-pvp.git#8e3a1ed",
     "mineflayer-pathfinder": "https://github.com/PrismarineJS/mineflayer-pathfinder.git#c9a7591",
-    "mineflayer-armor-manager": "https://github.com/PrismarineJS/MineflayerArmorManager.git#a01dcf2",
+    "mineflayer-armor-manager": "^2.0.1",
     "mineflayer-auto-eat": "https://github.com/link-discord/mineflayer-auto-eat.git#9d45ea9",
     "mineflayer-statemachine": "https://github.com/PrismarineJS/mineflayer-statemachine.git#2788ae6",
     "mineflayer-utils": "https://github.com/TheDudeFromCI/mineflayer-utils.git#54a0c0b",
