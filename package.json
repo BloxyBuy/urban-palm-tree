@@ -4,12 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "postinstall": "cd node_modules/mineflayer-armor-manager && npm install && npm run build"
   },
-  "scripts": {
-  "postinstall": "cd node_modules/mineflayer-armor-manager && npm install && npm run build"
-}
-
   "author": "MannuG",
   "license": "ISC",
   "dependencies": {
