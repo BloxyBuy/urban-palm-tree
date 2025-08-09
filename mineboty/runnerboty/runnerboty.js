@@ -1,78 +1,70 @@
 const mineflayer = require('mineflayer');
 const cmd = require('mineflayer-cmd').plugin;
-const readline = require('readline');
 const fs = require('fs');
-const http = require("http");
 const pvp = require('mineflayer-pvp').plugin;
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const armorManager = require('mineflayer-armor-manager');
 const inventoryViewer = require('mineflayer-web-inventory');
-const path = require("path");
 
 let rawdata = fs.readFileSync('./config.json');
 
 module.exports = function() {
     let data = JSON.parse(rawdata);
-    var lasttime = -1;
-    var moving = 0;
-    var connected = 0;
-    var actions = ['forward', 'back', 'left', 'right', 'jump'];
-    var lastaction;
-    var pi = 3.14159;
-    var moveinterval = 1; // 2 second movement interval
-    var maxrandom = 3; // 0-5 seconds added to movement interval (randomly)
-    var host = data["ip"];
-    var username = data["name"];
-    var nightskip = data["auto-night-skip"];
-    var channel = data["channelid"];
-    var token = data["token"];
-    var loginmessage = data["loginmsg"];
+    let lasttime = -1;
+    let moving = 0;
+    let connected = 0;
+    let actions = ['forward', 'back', 'left', 'right', 'jump'];
+    let lastaction;
+    const pi = 3.14159;
+    const moveinterval = 1; // 2 second movement interval
+    const maxrandom = 3; // 0-5 seconds added to movement interval (randomly)
+    const host = data["ip"];
+    const username = data["name"];
+    const nightskip = data["auto-night-skip"];
+    const loginmessage = data["loginmsg"];
 
-    var reconnectDelay = 5000; // reconnect delay start 5 seconds
-    var inventoryServer = null;
+    let reconnectDelay = 5000; // reconnect delay start 5 seconds
+    let inventoryServer = null;
 
     function createBot() {
-        var bot = mineflayer.createBot({
+        const bot = mineflayer.createBot({
             host: host,
             username: username,
             version: data.version || '1.20.4'
         });
 
-        // Increase max listeners to avoid warning about EventEmitter memory leak
         bot.setMaxListeners(30);
 
         function getRandomArbitrary(min, max) {
             return Math.random() * (max - min) + min;
         }
 
-        bot.on('login', function() {
+        bot.on('login', () => {
             console.log("Done all set Thank's for using mineboty");
             console.log("Logged In Successfully 👍");
             bot.chat(loginmessage);
         });
 
-        bot.on('time', function(time) {
-            if (nightskip === "true") {
-                if (bot.time.timeOfDay >= 13000) {
-                    bot.chat('/time set day');
-                }
+        bot.on('time', () => {
+            if (nightskip === "true" && bot.time.timeOfDay >= 13000) {
+                bot.chat('/time set day');
             }
-            if (connected < 1) {
-                return;
-            }
+            if (connected < 1) return;
+
             if (lasttime < 0) {
                 lasttime = bot.time.age;
             } else {
-                var randomadd = Math.random() * maxrandom * 20;
-                var interval = moveinterval * 20 + randomadd;
+                const randomadd = Math.random() * maxrandom * 20;
+                const interval = moveinterval * 20 + randomadd;
+
                 if (bot.time.age - lasttime > interval) {
-                    if (moving == 1) {
+                    if (moving === 1) {
                         bot.setControlState(lastaction, false);
                         moving = 0;
                         lasttime = bot.time.age;
                     } else {
-                        var yaw = Math.random() * pi - (0.5 * pi);
-                        var pitch = Math.random() * pi - (0.5 * pi);
+                        const yaw = Math.random() * pi - (0.5 * pi);
+                        const pitch = Math.random() * pi - (0.5 * pi);
                         bot.look(yaw, pitch, false);
                         lastaction = actions[Math.floor(Math.random() * actions.length)];
                         bot.setControlState(lastaction, true);
@@ -95,10 +87,6 @@ module.exports = function() {
                 const sword = bot.inventory.items().find(item => item.name.includes('sword'));
                 if (sword) bot.equip(sword, 'hand');
             }, 150);
-        });
-
-        bot.on('playerCollect', (collector, itemDrop) => {
-            if (collector !== bot.entity) return;
 
             setTimeout(() => {
                 const shield = bot.inventory.items().find(item => item.name.includes('shield'));
@@ -129,9 +117,7 @@ module.exports = function() {
         }
 
         bot.on('stoppedAttacking', () => {
-            if (guardPos) {
-                moveToGuardPos();
-            }
+            if (guardPos) moveToGuardPos();
         });
 
         bot.on('physicTick', () => {
@@ -146,7 +132,7 @@ module.exports = function() {
             if (!guardPos) return;
 
             const filter = e => e.type === 'mob' && e.position.distanceTo(bot.entity.position) < 16 &&
-                e.mobType !== 'Armor Stand'; // Mojang classifies armor stands as mobs for some reason?
+                e.mobType !== 'Armor Stand';
 
             const entity = bot.nearestEntity(filter);
             if (entity) {
@@ -157,12 +143,10 @@ module.exports = function() {
         bot.on('chat', (username, message) => {
             if (message === 'guard') {
                 const player = bot.players[username];
-
                 if (!player) {
                     bot.chat("I can't see you.");
                     return;
                 }
-
                 bot.chat('I will guard that location.');
                 guardArea(player.entity.position);
             }
@@ -171,12 +155,10 @@ module.exports = function() {
         bot.on('chat', (username, message) => {
             if (message === 'fight me') {
                 const player = bot.players[username];
-
                 if (!player) {
                     bot.chat("I can't see you.");
                     return;
                 }
-
                 bot.chat('Prepare to fight!');
                 bot.pvp.attack(player.entity);
             }
@@ -191,13 +173,6 @@ module.exports = function() {
 
         bot.on('chat', (username, message) => {
             if (message === 'kartik op') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("kartik is always op");
-                    return;
-                }
-
                 bot.chat('kartik is always op');
             }
         });
@@ -217,6 +192,7 @@ module.exports = function() {
         bot.on('sleep', () => {
             bot.chat('Good night!');
         });
+
         bot.on('wake', () => {
             bot.chat('Good morning!');
         });
@@ -247,123 +223,67 @@ module.exports = function() {
 
         bot.on('chat', (username, message) => {
             if (message === 'hello') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("hi");
-                    return;
-                }
-
                 bot.chat('hi');
             }
         });
 
         bot.on('chat', (username, message) => {
             if (message === 'who made you') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("kartik op from Team IC");
-                    return;
-                }
-
-                bot.chat(`kartik op from Team IC ${bot.players[username]} `);
+                bot.chat('kartik op from Team IC');
             }
         });
 
         bot.on('chat', (username, message) => {
-            if (message === 'day') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("/time set day");
-                    return;
-                }
-                bot.chat('/time set day');
-            }
-        });
-
-        bot.on('chat', (username, message) => {
-            if (message === 'midnight') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("/time set midnight");
-                    return;
-                }
-                bot.chat('/time set midnight');
-            }
-        });
-
-        bot.on('chat', (username, message) => {
-            if (message === 'noon') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("/time set noon");
-                    return;
-                }
-                bot.chat('/time set noon');
-            }
-        });
-
-        bot.on('chat', (username, message) => {
-            if (message === 'rain') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("/weather rain");
-                    return;
-                }
-                bot.chat('/weather rain');
-            }
-        });
-
-        bot.on('chat', (username, message) => {
-            if (message === 'wclear') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("/weather clear");
-                    return;
-                }
-                bot.chat('/weather clear');
-            }
-        });
-
-        bot.on('chat', (username, message) => {
-            if (message === 'wthunder') {
-                const player = bot.players[username];
-
-                if (!player) {
-                    bot.chat("/weather thunder");
-                    return;
-                }
-                bot.chat('/weather thunder');
+            switch (message) {
+                case 'day':
+                    bot.chat('/time set day');
+                    break;
+                case 'midnight':
+                    bot.chat('/time set midnight');
+                    break;
+                case 'noon':
+                    bot.chat('/time set noon');
+                    break;
+                case 'rain':
+                    bot.chat('/weather rain');
+                    break;
+                case 'wclear':
+                    bot.chat('/weather clear');
+                    break;
+                case 'wthunder':
+                    bot.chat('/weather thunder');
+                    break;
             }
         });
 
         bot.loadPlugin(cmd);
         bot.loadPlugin(inventoryViewer);
 
-        // Start the inventory web server once the bot spawns
         bot.once('spawn', () => {
             if (inventoryServer) {
-                inventoryServer.close();
+                try {
+                    inventoryServer.close();
+                } catch (e) {
+                    console.warn('Error closing previous inventory server:', e);
+                }
             }
-            inventoryServer = inventoryViewer(bot);
+            inventoryServer = inventoryViewer(bot, { port: 3000 });
             console.log('Inventory web server started on port 3000');
         });
 
         bot.on('end', () => {
             console.log(`Bot disconnected. Reconnecting in ${reconnectDelay / 1000} seconds...`);
             if (inventoryServer) {
-                inventoryServer.close();
+                try {
+                    inventoryServer.close();
+                    console.log('Inventory viewer stopped');
+                } catch (e) {
+                    console.warn('Error closing inventory viewer:', e);
+                }
                 inventoryServer = null;
-                console.log('Inventory viewer stopped');
             }
             setTimeout(() => {
-                reconnectDelay = Math.min(reconnectDelay * 2, 60000); // max 1 minute backoff
+                reconnectDelay = Math.min(reconnectDelay * 2, 60000);
                 createBot();
             }, reconnectDelay);
         });
@@ -372,7 +292,6 @@ module.exports = function() {
             console.error('Bot error:', err);
         });
 
-        // Listen for low level socket errors to catch ECONNRESET / EPIPE
         bot._client.on('error', (err) => {
             console.error('Low-level client error:', err);
         });
@@ -382,7 +301,6 @@ module.exports = function() {
 
     createBot();
 
-    // Global handlers to prevent crashes
     process.on('uncaughtException', (err) => {
         console.error('Uncaught Exception:', err);
     });
