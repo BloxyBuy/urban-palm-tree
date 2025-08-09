@@ -9,7 +9,6 @@ const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 const armorManager = require('mineflayer-armor-manager')
 const inventoryViewer = require('mineflayer-web-inventory')
 const path = require("path");
-bot.setMaxListeners(20) // or more
 
 module.exports = function() {
     let data = JSON.parse(rawdata);
@@ -402,7 +401,9 @@ module.exports = function() {
     bot.on('death', function() {
         bot.emit('respawn')
     })
+    bot.setMaxListeners(20) // or more
 
     inventoryViewer(bot);
 }
+
 
