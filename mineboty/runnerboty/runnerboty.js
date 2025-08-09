@@ -33,6 +33,22 @@ module.exports = function() {
         version: data.version || '1.20.4'
     });
 
+    // Increase max listeners to prevent warning
+    bot.setMaxListeners(20);
+
+    // Handle errors to prevent crashes
+    bot.on('error', (err) => {
+        console.error('Bot error:', err);
+    });
+
+    // Handle disconnects and try to reconnect after 5 seconds
+    bot.on('end', () => {
+        console.log('Bot disconnected. Attempting to reconnect in 5 seconds...');
+        setTimeout(() => {
+            module.exports();  // Re-run this function to reconnect
+        }, 5000);
+    });
+
     function getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
     }
@@ -79,7 +95,6 @@ module.exports = function() {
     bot.loadPlugin(pvp)
     bot.loadPlugin(armorManager)
     bot.loadPlugin(pathfinder)
-
 
     bot.on('playerCollect', (collector, itemDrop) => {
         if (collector !== bot.entity) return
@@ -139,7 +154,7 @@ module.exports = function() {
         if (!guardPos) return
 
         const filter = e => e.type === 'mob' && e.position.distanceTo(bot.entity.position) < 16 &&
-            e.mobType !== 'Armor Stand' // Mojang classifies armor stands as mobs for some reason?
+            e.mobType !== 'Armor Stand'
 
         const entity = bot.nearestEntity(filter)
         if (entity) {
@@ -239,7 +254,6 @@ module.exports = function() {
         }
     }
 
-
     bot.on('chat', (username, message) => {
         if (message === 'hello') {
             const player = bot.players[username]
@@ -268,10 +282,6 @@ module.exports = function() {
         }
     })
 
-
-
-
-
     bot.on('chat', (username, message) => {
         if (message === 'day') {
             const player = bot.players[username]
@@ -281,10 +291,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/time set day')
-
-
         }
     })
 
@@ -297,10 +304,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/time set midnight')
-
-
         }
     })
 
@@ -313,10 +317,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/time set noon')
-
-
         }
     })
 
@@ -329,10 +330,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/weather rain')
-
-
         }
     })
 
@@ -345,10 +343,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/weather clear')
-
-
         }
     })
 
@@ -361,10 +356,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/time set night')
-
-
         }
     })
 
@@ -377,10 +369,7 @@ module.exports = function() {
                 return
             }
 
-
             bot.chat('/weather thunder')
-
-
         }
     })
 
@@ -394,16 +383,12 @@ module.exports = function() {
         }
     })
 
-
     bot.on('spawn', function() {
         connected = 1
     })
     bot.on('death', function() {
         bot.emit('respawn')
     })
-    bot.setMaxListeners(20) // or more
 
     inventoryViewer(bot);
 }
-
-
