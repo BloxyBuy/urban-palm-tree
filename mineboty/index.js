@@ -8,9 +8,9 @@ function mineboty() {
     console.log("\x1B[36m \x1B[1m Welcome to mineboty v1.0.6 see :- \x1B[31m https://www.npmjs.com/package/mineboty");
     console.log("\x1B[35m \x1B[1mJoin discord :- \x1B[31m https://teamic.ml/");
     console.log("\x1B[31m You have any problem or issues you can see this & frok also :) :- \x1B[32m[30m https://github.com/Team-IC/Mineboty");
+    require("./runnerboty/runnerboty");  // ← ✅ just require it, no return
+}
 
-    // Require the bot runner module
-    const botRunner = require("./runnerboty/runnerboty");
 
     // Call the returned function to actually start the bot
     if (typeof botRunner === "function") {
@@ -53,3 +53,4 @@ function paste() {
 }
 
 module.exports = { mineboty, online, eat, pvp, inv, cmd, ne, paste, mcc };
+
